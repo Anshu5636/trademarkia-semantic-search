@@ -1,34 +1,3 @@
-"""
-Part 2: Fuzzy Clustering
--------------------------
-Uncovers the *real* semantic structure of the corpus.
-Hard cluster assignments (k-means label = 3) are rejected here.
-We use Fuzzy C-Means so each document gets a *distribution* over clusters.
-
-Design decisions:
-─────────────────
-WHY FUZZY C-MEANS over k-means:
-  A post about "gun legislation" legitimately belongs to both
-  rec.guns AND talk.politics.  Fuzzy C-Means (FCM) models this by
-  assigning membership probabilities, e.g. [0.6 guns, 0.35 politics, 0.05 …].
-  This is the right model for newsgroup text, which is genuinely ambiguous.
-
-WHY NOT LDA (topic modelling):
-  LDA operates on bag-of-words; FCM operates on dense semantic embeddings.
-  Our embeddings already encode meaning, so FCM on embeddings > LDA on BOW.
-
-CHOOSING k (number of clusters):
-  We evaluate k ∈ {10, 15, 20, 25, 30} using the Fuzzy Partition Coefficient
-  (FPC).  FPC = 1 means perfectly hard clusters; FPC near 1/k means totally
-  fuzzy (random).  We pick the k where FPC stops improving substantially — an
-  "elbow" in FPC space.  We also cross-check with Average Membership Entropy:
-  lower entropy = crisper clusters = more distinct topics.
-
-  We also dimensionality-reduce before clustering (PCA → 50 dims) because
-  FCM distance metrics degrade in high-dimensional space (curse of
-  dimensionality).  50 dims retains >95 % of embedding variance for MiniLM.
-"""
-
 import os
 import json
 import pickle
