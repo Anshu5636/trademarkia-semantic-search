@@ -1,30 +1,3 @@
-"""
-Part 4: FastAPI Service
-------------------------
-Exposes the semantic search system as a REST API.
-
-Endpoints:
-  POST   /query        — semantic search with cache
-  GET    /cache/stats  — cache statistics
-  DELETE /cache        — flush cache
-
-State management:
-  All mutable state (the cache, hit/miss counters) lives in the
-  SemanticCache singleton in cache/semantic_cache.py.
-  FastAPI itself is stateless — it just orchestrates the components.
-
-Startup:
-  On startup we load:
-    - SentenceTransformer model (for query embedding)
-    - PCA model (same reduction used during clustering)
-    - FuzzyCMeans model (for query cluster membership)
-    - ChromaDB collection (for semantic search)
-    - SemanticCache singleton
-
-Run with:
-  uvicorn api.main:app --host 0.0.0.0 --port 8000
-"""
-
 import os
 import json
 import pickle
