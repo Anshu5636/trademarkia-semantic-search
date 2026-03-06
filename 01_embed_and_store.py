@@ -1,24 +1,3 @@
-"""
-Part 1: Data Preparation & Embedding
--------------------------------------
-Downloads the 20 Newsgroups dataset FROM THE UCI LINK given in the task:
-https://archive.ics.uci.edu/dataset/113/twenty+newsgroups
-
-Falls back to sklearn mirror (same data) if UCI download fails.
-
-Design decisions (justified in comments throughout):
-- We use 'sentence-transformers/all-MiniLM-L6-v2' because it is fast,
-  lightweight (22M params), and benchmarks well on semantic similarity tasks.
-  A larger model (e.g. all-mpnet-base-v2) would be more accurate but 3x slower
-  to embed 20k docs — overkill for a demo service.
-- We use ChromaDB as the vector store: it is embedded (no server process),
-  file-persisted, and supports metadata filtering. FAISS would be faster for
-  pure ANN search but lacks metadata support and persistence out of the box.
-- We trim posts aggressively: headers (From/Subject/Organization lines) are
-  removed because they leak the category label via domain names, which would
-  make clustering trivial and uninteresting.
-"""
-
 import re
 import os
 import json
@@ -127,19 +106,6 @@ def find_newsgroups_root(base: Path) -> Path:
 
 
 def load_from_folder(news_dir: Path):
-    """
-    Walk the extracted UCI folder structure:
-
-    20_newsgroups/
-    ├── alt.atheism/       <- one folder per category
-    │   ├── 49960          <- one file per post
-    │   ├── 49961
-    │   └── ...
-    ├── comp.graphics/
-    └── ... (20 folders)
-
-    Each file is a raw newsgroup post (text).
-    """
     categories = sorted([
         d.name for d in news_dir.iterdir() if d.is_dir()
     ])
