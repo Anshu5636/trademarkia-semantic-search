@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Generated data (large files — don't commit)
+data/chroma_db/
+data/embeddings_cache.npz
+data/metadata_cache.json
+data/cluster_memberships.npz
+data/cluster_meta.json
+data/pca_model.pkl
+data/fcm_model.pkl
+
+# Jupyter notebooks (if used for exploration)
+*.ipynb
+.ipynb_checkpoints/

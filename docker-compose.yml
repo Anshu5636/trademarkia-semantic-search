@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  # ── Step 1: embed & store ────────────────────────────────────────────────
+  embed:
+    build: .
+    command: python 01_embed_and_store.py
+    volumes:
+      - data_vol:/app/data
+
+  # ── Step 2: fuzzy clustering ─────────────────────────────────────────────
+  cluster:
+    build: .
+    command: python 02_fuzzy_clustering.py
+    volumes:
+      - data_vol:/app/data
+    depends_on:
+      embed:
+        condition: service_completed_successfully
+
+  # ── Step 3 + 4: FastAPI service ──────────────────────────────────────────
+  api:
+    build: .
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - data_vol:/app/data
+    depends_on:
+      cluster:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+volumes:
+  data_vol:
